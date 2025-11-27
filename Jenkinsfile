@@ -50,16 +50,21 @@ pipeline {
 
 
 
-        stage('Dependency Check') {
-            steps {
-                sh '''
-                    dependency-check.sh \
-                      --scan . \
-                      --out dependency-check-report \
-                      --format HTML
-                '''
-            }
+       stage('Dependency Check') {
+    steps {
+        script {
+            // Nombre EXACTO de la herramienta configurada en Jenkins > Tools > Dependency-Check
+            def dcHome = tool 'DependencyCheck'
+
+            sh """
+                ${dcHome}/bin/dependency-check.sh \
+                  --scan . \
+                  --out dependency-check-report \
+                  --format HTML
+            """
         }
+    }
+}
 
         stage('Run Python App') {
             steps {
