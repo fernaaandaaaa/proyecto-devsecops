@@ -29,17 +29,25 @@ pipeline {
 
         stage('SonarQube Analysis') {
     steps {
-        withSonarQubeEnv('SonarQubeScanner') {
-            sh '''
-                . venv/bin/activate
-                sonar-scanner \
-                  -Dsonar.projectKey=proyecto-devsecops \
-                  -Dsonar.sources=. \
-                  -Dsonar.host.url=http://sonarqube:9000
-            '''
+        script {
+            // Nombre EXACTO del Scanner configurado en Jenkins
+            def scannerHome = tool 'SonarQubeScanner'
+
+            // Nombre EXACTO del servidor SonarQube definido en "SonarQube servers"
+            withSonarQubeEnv('SonarQubeScanner') {
+
+                sh """
+                    . venv/bin/activate
+                    "${scannerHome}/bin/sonar-scanner" \
+                      -Dsonar.projectKey=proyecto-devsecops \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=http://sonarqube:9000
+                """
+            }
         }
     }
 }
+
 
 
         stage('Dependency Check') {
