@@ -28,18 +28,19 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        . venv/bin/activate
-                        sonar-scanner \
-                          -Dsonar.projectKey=proyecto-devsecops \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=http://localhost:9000
-                    '''
-                }
-            }
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            sh '''
+                . venv/bin/activate
+                sonar-scanner \
+                  -Dsonar.projectKey=proyecto-devsecops \
+                  -Dsonar.sources=. \
+                  -Dsonar.host.url=http://sonarqube:9000
+            '''
         }
+    }
+}
+
 
         stage('Dependency Check') {
             steps {
