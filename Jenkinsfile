@@ -20,35 +20,35 @@ pipeline {
             steps {
                 sh '''
                     python3 -m venv venv
-                    source venv/bin/activate
+                    . venv/bin/activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
             }
         }
 
-     stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('instalaciones de SonarQube Scanner') {
-            sh '''
-                source venv/bin/activate
-                sonar-scanner \
-                  -Dsonar.projectKey=proyecto-devsecops \
-                  -Dsonar.sources=. \
-                  -Dsonar.host.url=http://localhost:9000
-            '''
+        stage('SonarQube Analysis') {
+            steps {
+                // IMPORTANTE: nombre exacto de tu server SonarQube en Jenkins → Configure System
+                withSonarQubeEnv('instalaciones de SonarQube Scanner') {
+                    sh '''
+                        . venv/bin/activate
+                        sonar-scanner \
+                          -Dsonar.projectKey=proyecto-devsecops \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=http://localhost:9000
+                    '''
+                }
+            }
         }
-    }
-}
-
 
         stage('Dependency Check') {
             steps {
                 sh '''
                     dependency-check.sh \
-                        --scan . \
-                        --out dependency-check-report \
-                        --format HTML
+                      --scan . \
+                      --out dependency-check-report \
+                      --format HTML
                 '''
             }
         }
@@ -56,7 +56,7 @@ pipeline {
         stage('Run Python App') {
             steps {
                 sh '''
-                    source venv/bin/activate
+                    . venv/bin/activate
                     python3 vulnerable_server.py &
                     sleep 5
                 '''
