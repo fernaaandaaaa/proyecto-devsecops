@@ -29,8 +29,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // IMPORTANTE: nombre exacto de tu server SonarQube en Jenkins → Configure System
-                withSonarQubeEnv('instalaciones de SonarQube Scanner') {
+                withSonarQubeEnv('SonarQubeScanner') {
                     sh '''
                         . venv/bin/activate
                         sonar-scanner \
